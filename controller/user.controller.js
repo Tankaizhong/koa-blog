@@ -22,6 +22,12 @@ class UserController {
     }
     next();
   }
+  /**
+   * 用户注册
+   * @param {*} req 
+   * @param {*} res 
+   * @param {*} next 
+   */
   async register(req, res, next) {
     // 1. 获取数据
     const { Username, Password } = req.body;

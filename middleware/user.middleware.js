@@ -4,7 +4,7 @@ const {
   userRegisterError,
 } = require("../constant/err.type");
 
-const getUerInfo = require("../service/user.service");
+const { getUserInfo } = require("../service/user.service");
 /**
  * //密码用户名判空验证
  * @param {Promise} req
@@ -32,23 +32,17 @@ const userValidator = async (req, res, next) => {
 const verifyUser = async (req, res, next) => {
   const { Username } = req.body;
   try {
-    const result = await getUerInfo({ Username });
-    console.log(result);
-    console.log("1212=>", res);
-    if (res) {
+    const result = await getUserInfo({ Username });
+    if (result) {
       console.error("用户名已经存在", { Username });
-
-      res.status(400).json(userAlreadyExited, result);
-
+      res.status(409).json(userAlreadyExited);
       return;
     }
   } catch (err) {
     console.error("获取用户信息错误", err);
-    res.status(400).json(userRegisterError);
-    // ctx.app.emit("error", userRegisterError, ctx);
+    res.status(500).json({ ...userRegisterError, ...err });
     return;
   }
-
   await next();
 };
 
