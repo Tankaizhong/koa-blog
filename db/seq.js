@@ -13,9 +13,7 @@ const {
 const seq = new Sequelize(MYSQL_DB, MYSQL_USER, MYSQL_PWD, {
   host: MYSQL_HOST,
   dialect: 'mysql', // 选择你使用的数据库类型
-  definre: {
-    timestamps: true, // 启用时间戳属性
-  },
+  timezone: '+08:00', // 设置为数据库的时区
 })
 
 seq

@@ -22,8 +22,8 @@ const PostTag = sequelize.define(
     },
   },
   {
-    tableName: 'PostTags', // 可以指定表名
-    timestamps: false, // 不自动添加 createdAt 和 updatedAt 字段
+    tableName: 'Post-Tags', // 可以指定表名
+    timestamps: true, // 不自动添加 createdAt 和 updatedAt 字段
   },
 )
 

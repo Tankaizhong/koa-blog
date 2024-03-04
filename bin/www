@@ -96,13 +96,13 @@ const comments = require('../model/comments.model')
 const categories = require('../model/categories.model')
 const tag = require('../model/tag.model')
 const postTags = require('../model/postTags.model')
-
+const PostCategories = require('../model/PostCategories.model')
 // 同步数据库结构
-sequelize
-  .sync({ alter: true })
-  .then(() => {
-    console.log('数据库同步完成')
-  })
-  .catch((err) => {
-    console.error('数据库同步失败', err)
-  })
+// sequelize
+//   .sync({ alter: true })
+//   .then(() => {
+//     console.log('数据库同步完成')
+//   })
+//   .catch((err) => {
+//     console.error('数据库同步失败', err)
+//   })
