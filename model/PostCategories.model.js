@@ -1,10 +1,10 @@
-const { DataTypes } = require('sequelize')
-const sequelize = require('../db/seq')
-const Posts = require('./posts.model')
-const Categories = require('./categories.model')
+const { DataTypes } = require("sequelize");
+const sequelize = require("../db/seq");
+const Posts = require("./posts.model");
+const Categories = require("./categories.model");
 
 const PostCategory = sequelize.define(
-  'PostCategory',
+  "PostCategory",
   {
     PostID: {
       type: DataTypes.INTEGER,
@@ -18,26 +18,26 @@ const PostCategory = sequelize.define(
     },
   },
   {
-    tableName: 'post-categories', // 可以指定表名
+    tableName: "post-categories", // 可以指定表名
     timestamps: true, // 不自动添加 createdAt 和 updatedAt 字段
   },
-)
+);
 
-PostCategory.belongsTo(Posts, { foreignKey: 'PostID', onDelete: 'CASCADE' })
+PostCategory.belongsTo(Posts, { foreignKey: "PostID", onDelete: "CASCADE" });
 PostCategory.belongsTo(Categories, {
-  foreignKey: 'CategoryID',
-  onDelete: 'CASCADE',
-})
+  foreignKey: "CategoryID",
+  onDelete: "CASCADE",
+});
 
 Posts.belongsToMany(Categories, {
   through: PostCategory,
-  foreignKey: 'PostID',
-  otherKey: 'CategoryID',
-})
+  foreignKey: "PostID",
+  otherKey: "CategoryID",
+});
 Categories.belongsToMany(Posts, {
   through: PostCategory,
-  foreignKey: 'CategoryID',
-  otherKey: 'PostID',
-})
+  foreignKey: "CategoryID",
+  otherKey: "PostID",
+});
 
-module.exports = PostCategory
+module.exports = PostCategory;
