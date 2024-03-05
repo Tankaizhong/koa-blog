@@ -8,4 +8,9 @@ module.exports = {
     code: "20002",
     message: "用户登录成功",
   },
+  //成功发布文章
+  userSuccessPublish: {
+    code: "20003",
+    message: "用户发布文章成功",
+  },
 };

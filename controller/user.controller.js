@@ -4,6 +4,7 @@ const { createUser } = require("../service/user.service");
 const {
   userSuccessReg,
   userSuccessLogin,
+  userSuccessPublish,
 } = require("../constant/success.type");
 
 // 导入createUser
@@ -57,6 +58,33 @@ class UserController {
         result: {
           UserID: result.UserID,
           Username: result.Username,
+        },
+      });
+    } catch (err) {
+      console.log(err);
+      next(err);
+    }
+  }
+  /**
+   * 发表文章
+   * @param {*} req
+   * @param {*} res
+   * @param {*} next
+   */
+  async publish(req, res, next) {
+    // 1. 获取数据
+    const { UserID } = req.body.user;
+    const { title, content } = req.body;
+    // 2. 操作数据库
+
+    try {
+      // 3. 返回结果
+      res.status(200).json({
+        ...userSuccessPublish,
+        result: {
+          UserID,
+          title,
+          content,
         },
       });
     } catch (err) {

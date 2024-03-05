@@ -1,5 +1,6 @@
 const bcrypt = require("bcryptjs");
-
+const jwt = require("jsonwebtoken");
+const { JWT_SECRET } = require("../config/config.default");
 const {
   userFormateError,
   userAlreadyExited,
@@ -7,6 +8,7 @@ const {
   userDoesNotExist,
   userLoginError,
   invalidPassword,
+  invalidToken,
 } = require("../constant/err.type");
 
 const { getUserInfo } = require("../service/user.service");
@@ -95,6 +97,14 @@ const verifyLogin = async (req, res, next) => {
   }
   await next();
 };
+
+/**
+ * token验证
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ * @returns
+ */
 
 module.exports = {
   userValidator,

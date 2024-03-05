@@ -44,6 +44,13 @@ module.exports = {
     message: "没有管理员权限",
     result: "",
   },
+
+  articleContentError: {
+    code: "10104",
+    message: "文章内容为空",
+    result: "",
+  },
+
   //开始
   fileUploadError: {
     code: "10201",

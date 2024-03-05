@@ -10,11 +10,10 @@ const {
   verifyLogin,
   crpytPassword,
 } = require("../middleware/user.middleware");
+const { verifyToken } = require("../middleware/auth.middleware");
 
 // control 层注册
-const { register } = require("../controller/user.controller");
-
-const { login } = require("../controller/user.controller");
+const { login, register, publish } = require("../controller/user.controller");
 
 /* GET users listing. */
 router.get("/", function (req, res, next) {
@@ -26,5 +25,8 @@ router.post("/register", userValidator, verifyUser, crpytPassword, register);
 
 //登陆接口
 router.post("/login", userValidator, verifyLogin, login);
+
+//发表文章
+router.post("/publish", verifyToken, publish);
 
 module.exports = router;
