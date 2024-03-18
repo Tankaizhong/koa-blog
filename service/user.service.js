@@ -1,6 +1,12 @@
 const User = require("../model/user.model");
-
+const Post = require("../model/posts.model");
 class UserService {
+  /**
+   * 创建用户
+   * @param {*} Username
+   * @param {*} Password
+   * @returns
+   */
   async createUser(Username, Password) {
     // 插入数据
     // await表达式: promise对象的值

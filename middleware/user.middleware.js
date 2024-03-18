@@ -9,7 +9,7 @@ const {
   userLoginError,
   invalidPassword,
   invalidToken,
-} = require("../constant/err.type");
+} = require("../constant/error.type");
 
 const { getUserInfo } = require("../service/user.service");
 /**

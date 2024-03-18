@@ -1,5 +1,6 @@
-var express = require("express");
-var router = express.Router({
+const express = require("express");
+// 路由前缀
+const router = express.Router({
   prefix: "/users",
 });
 
@@ -13,7 +14,17 @@ const {
 const { verifyToken } = require("../middleware/auth.middleware");
 
 // control 层注册
-const { login, register, publish } = require("../controller/user.controller");
+const { login, register } = require("../controller/user.controller");
+const {
+  publish,
+  findByUserID,
+  updateArticle,
+} = require("../controller/post.control");
+
+const {
+  validatePost,
+  checkDuplicateArticle,
+} = require("../middleware/post.middleware");
 
 /* GET users listing. */
 router.get("/", function (req, res, next) {
@@ -25,8 +36,5 @@ router.post("/register", userValidator, verifyUser, crpytPassword, register);
 
 //登陆接口
 router.post("/login", userValidator, verifyLogin, login);
-
-//发表文章
-router.post("/publish", verifyToken, publish);
 
 module.exports = router;

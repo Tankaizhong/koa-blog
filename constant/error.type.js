@@ -39,24 +39,42 @@ module.exports = {
     message: "无效的token",
     result: "",
   },
-  hasNotAdminPermission: {
+  missingToken: {
     code: "10103",
+    message: "缺失token",
+    result: "",
+  },
+
+  hasNotAdminPermission: {
+    code: "10104",
     message: "没有管理员权限",
     result: "",
   },
-
-  articleContentError: {
-    code: "10104",
-    message: "文章内容为空",
+  //文章
+  //文章重复,请勿重复发布
+  postDuplicateError: {
+    code: "11001",
+    message: "文章重复,请勿重复发布",
+    result: "",
+  },
+  postContentError: {
+    code: "11004",
+    message: "标题或内容不能为空",
+    result: "",
+  },
+  //文章发布失败
+  postPublishError: {
+    code: "11005",
+    message: "文章发布失败",
+    result: "",
+  },
+  //文章不存在
+  postNotExist: {
+    code: "11006",
+    message: "文章不存在",
     result: "",
   },
 
-  //开始
-  fileUploadError: {
-    code: "10201",
-    message: "商品图片上传失败",
-    result: "",
-  },
   unSupportedFileType: {
     code: "10202",
     message: "不支持的文件格式",
@@ -90,6 +108,12 @@ module.exports = {
   orderFormatError: {
     code: "10501",
     message: "订单数据格式错误",
+    result: "",
+  },
+
+  serverError: {
+    code: "50001",
+    message: "服务器内部错误",
     result: "",
   },
 };

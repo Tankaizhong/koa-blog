@@ -1,14 +1,16 @@
-var createError = require("http-errors");
-var express = require("express");
-var path = require("path");
-var cookieParser = require("cookie-parser");
-var logger = require("morgan");
+const createError = require("http-errors");
+const express = require("express");
+const path = require("path");
+const cookieParser = require("cookie-parser");
+const logger = require("morgan");
 
 //路由管理
-var indexRouter = require("./routes/index");
-var usersRouter = require("./routes/users.route");
+const indexRouter = require("./routes/index");
+const usersRouter = require("./routes/users.route");
+const postsRouter = require("./routes/posts.router");
+const testRouter = require("./routes/test.router");
 
-var app = express();
+const app = express();
 //使用koa-body中间件
 
 // view engine setup
@@ -18,13 +20,15 @@ app.set("view engine", "jade");
 app.use(logger("dev"));
 app.use(express.json());
 
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-//路由
+//路由使用
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
+app.use("/posts", postsRouter);
+app.use("/test", testRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

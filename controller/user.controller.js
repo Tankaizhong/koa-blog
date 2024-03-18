@@ -1,6 +1,9 @@
 const jwt = require("jsonwebtoken");
-const { getUserInfo } = require("../service/user.service");
-const { createUser } = require("../service/user.service");
+const {
+  createUser,
+  publishArticle,
+  getUserInfo,
+} = require("../service/user.service");
 const {
   userSuccessReg,
   userSuccessLogin,
@@ -9,6 +12,7 @@ const {
 
 // 导入createUser
 const { JWT_SECRET } = require("../config/config.default");
+const { postPublishError } = require("../constant/error.type");
 
 class UserController {
   /**
@@ -46,45 +50,14 @@ class UserController {
    * @param {*} next
    */
   async register(req, res, next) {
-    // 1. 获取数据
     const { Username, Password } = req.body;
-    // 2. 操作数据库
     try {
       const result = await createUser(Username, Password);
-
-      // 3. 返回结果
       res.status(200).json({
         ...userSuccessReg,
         result: {
           UserID: result.UserID,
           Username: result.Username,
-        },
-      });
-    } catch (err) {
-      console.log(err);
-      next(err);
-    }
-  }
-  /**
-   * 发表文章
-   * @param {*} req
-   * @param {*} res
-   * @param {*} next
-   */
-  async publish(req, res, next) {
-    // 1. 获取数据
-    const { UserID } = req.body.user;
-    const { title, content } = req.body;
-    // 2. 操作数据库
-
-    try {
-      // 3. 返回结果
-      res.status(200).json({
-        ...userSuccessPublish,
-        result: {
-          UserID,
-          title,
-          content,
         },
       });
     } catch (err) {
