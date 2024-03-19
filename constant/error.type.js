@@ -74,6 +74,12 @@ module.exports = {
     message: "文章不存在",
     result: "",
   },
+  //标签不能为kong
+  postTagError: {
+    code: "11007",
+    message: "请选择至少一个标签",
+    result: "",
+  },
 
   unSupportedFileType: {
     code: "10202",

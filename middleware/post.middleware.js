@@ -4,9 +4,13 @@ const {
   postContentError,
   postDuplicateError,
   serverError,
+  postTagError,
 } = require("../constant/error.type");
 const { Post } = require("../model/posts.model");
-const { findPostByUserID,findUserPostsByTitle } = require("../service/post.service");
+const {
+  findPostByUserID,
+  findUserPostsByTitle,
+} = require("../service/post.service");
 /**
  * 文章内容验证中间件
  * @param {*} ctx
@@ -14,11 +18,15 @@ const { findPostByUserID,findUserPostsByTitle } = require("../service/post.servi
  * @returns
  */
 const validatePost = async (req, res, next) => {
-  const { Title, Content } = req.body;
-  // 检查 title 和 content 是否为空
+  const { Title, Content, TagName } = req.body;
+  console.log(req.body, "req.body");
+  // 检查 title 和 content 和 Tag 是否为空,switch选择
   if (!Title || !Content) {
     //返回错误
     res.status(400).json(postContentError);
+    return;
+  } else {
+    res.status(400).json(postTagError);
     return;
   }
   // 执行下一个中间件

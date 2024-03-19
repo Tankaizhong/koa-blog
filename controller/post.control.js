@@ -3,9 +3,15 @@ const {
   serverError,
   postNotExist,
 } = require("../constant/error.type");
-const {userSuccessPublish} = require("../constant/success.type");
-const {findPostByUserID} = require("../service/post.service");
-const {publishArticle, updateArticle} = require("../service/post.service");
+const { userSuccessPublish } = require("../constant/success.type");
+const { findPostByUserID } = require("../service/post.service");
+const {
+  publishArticle,
+  updateArticle,
+  findTopPost,
+} = require("../service/post.service");
+const Posts = require("../model/posts.model");
+const tagService = require("../service/tag.service");
 
 class PostController {
   /**
@@ -15,12 +21,11 @@ class PostController {
    * @param {*} next
    */
   async publish(req, res, next) {
-    console.log(req.body, "第18")
     try {
       const result = await publishArticle(req.body);
       res.status(200).json({
         ...userSuccessPublish,
-        ...result
+        ...result,
       });
       return;
     } catch (err) {
@@ -52,13 +57,23 @@ class PostController {
    */
   async updateArticle(req, res, next) {
     try {
-      const {UserID, Title, Content} = req.body.user;
+      const { UserID, Title, Content } = req.body.user;
       const updatedPost = await updateArticle(UserID, Title, Content);
       if (updatedPost) {
         res.status(200).json(updatedPost);
       } else {
         res.status(404).json(postNotExist);
       }
+    } catch (err) {
+      console.log(err);
+      res.status(500).json(serverError);
+    }
+  }
+
+  //getTopPost
+  async getTopPost(req, res, next) {
+    try {
+      const post = await findTopPost();
     } catch (err) {
       console.log(err);
       res.status(500).json(serverError);

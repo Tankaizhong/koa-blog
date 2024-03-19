@@ -1,5 +1,7 @@
 const Posts = require("../model/posts.model");
 const User = require("../model/user.model");
+const sequelize = require("../db/seq");
+const tagService = require("./tag.service");
 
 class PostService {
   /**
@@ -7,18 +9,18 @@ class PostService {
    * @param {*} userID 用户ID
    * @param {*} title  标题
    */
-  async findPostByUserID({UserID, Title}) {
+  async findPostByUserID({ UserID, Title }) {
     try {
       // 查询数据库，查找符合条件的文章
       const posts = await Posts.findAll({
         where: {
-          '$User.UserID$': UserID,
+          "$User.UserID$": UserID,
         },
         include: [
           {
             model: User, // 关联的模型是 User
             attributes: [], // 指定要查询的用户模型的属性，或者不指定以获取全部属性
-            as: 'User', // 关联的别名，与查询条件中的 '$User.UserID$' 对应
+            as: "User", // 关联的别名，与查询条件中的 '$User.UserID$' 对应
           },
         ],
       });
@@ -28,8 +30,7 @@ class PostService {
       }
       console.log(posts, "posts.dataValues");
       return posts.map((post) => post.dataValues);
-    } catch
-        (error) {
+    } catch (error) {
       // 处理查询过程中的错误
       console.error("查找文章时出错", error);
       throw error; // 或者根据实际情况进行错误处理
@@ -40,20 +41,46 @@ class PostService {
    * 文章发布
    * @param {*} param0
    */
-  async publishArticle({Title, Content, user: {UserID: UserID}}) {
+  // 在发布文章的函数中调用更新标签和分类的逻辑
+  async publishArticle({
+    Title,
+    Content,
+    user: { UserID: UserID },
+    Tags,
+    Categories,
+  }) {
+    let transaction;
     try {
-      const newPost = await Posts.create({
-        Title,
-        Content,
-        UserID,
-        // 其他字段...
-        Likes: 0,
-        Replies: 0,
-        Views: 0,
-      });
+      // 开启事务
+      transaction = await sequelize.transaction();
+
+      // 创建文章
+      const newPost = await Posts.create(
+        {
+          Title,
+          Content,
+          UserID,
+          Likes: 0,
+          Replies: 0,
+          Views: 0,
+        },
+        { transaction },
+      );
+      // console.log(newPost.PostID, "newPost.dataValues")
+      // 调用更新标签和分类的函数
+      await tagService.updateTagsAndCategories(
+        newPost.PostID,
+        Tags,
+        Categories,
+      );
+
+      // 提交事务
+      await transaction.commit();
+
       return newPost.dataValues;
     } catch (error) {
-      console.error("发布文章失败", error);
+      // 回滚事务
+      if (transaction) await transaction.rollback();
       throw error;
     }
   }
@@ -63,7 +90,7 @@ class PostService {
    * @param {*} postID 文章ID
    * @param {*} updatedData 更新的数据
    */
-  async updatePost({PostID, updatedData}) {
+  async updatePost({ PostID, updatedData }) {
     try {
       const [rowsAffected, [updatedPost]] = await Posts.update(updatedData, {
         where: {
@@ -82,7 +109,7 @@ class PostService {
   }
 
   //判断是否重复发布文章
-  async findUserPostsByTitle({UserID, Title}) {
+  async findUserPostsByTitle({ UserID, Title }) {
     try {
       const existingArticle = await Posts.findOne({
         where: {
@@ -91,7 +118,7 @@ class PostService {
         include: [
           {
             model: User, // 关联的模型是 User
-            attributes: ['UserID'], // 指定要查询的用户模型的属性
+            attributes: ["UserID"], // 指定要查询的用户模型的属性
             where: {
               UserID,
             },
@@ -104,7 +131,21 @@ class PostService {
       throw error;
     }
   }
+  /**
+   * 查找top文章
+   * @returns
+   */
+  async findTopPost() {
+    try {
+      const topPost = await Posts.findAll({
+        order: [["Views", "DESC"]],
+        limit: 20,
+      });
+      return topPost;
+    } catch (error) {
+      console.error("查找文章时出错", error);
+      throw error;
+    }
+  }
 }
-
-module
-    .exports = new PostService();
+module.exports = new PostService();

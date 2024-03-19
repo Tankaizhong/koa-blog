@@ -2,7 +2,7 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../db/seq");
 const Post = require("./posts.model");
-const Tag = require("./tag.model");
+const Tag = require("./tags.model");
 //博文与分类的多对多
 const PostTag = sequelize.define(
   "PostTag",

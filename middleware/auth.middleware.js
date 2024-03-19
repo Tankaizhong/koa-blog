@@ -1,6 +1,6 @@
-const {invalidToken, missingToken} = require("../constant/error.type");
+const { invalidToken, missingToken } = require("../constant/error.type");
 const jwt = require("jsonwebtoken");
-const {JWT_SECRET} = require("../config/config.default");
+const { JWT_SECRET } = require("../config/config.default");
 
 /**
  * token验证
@@ -22,7 +22,7 @@ const verifyToken = async (req, res, next) => {
     req.body.user = result;
   } catch (error) {
     console.log("token验证失败", error);
-    res.status(401).json({...invalidToken, ...error});
+    res.status(401).json({ ...invalidToken, ...error });
     return;
   }
   await next();

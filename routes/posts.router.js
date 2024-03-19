@@ -7,6 +7,7 @@ const {
   publish,
   findByUserID,
   updateArticle,
+  getTopPost,
 } = require("../controller/post.control");
 const express = require("express");
 const router = express.Router({
@@ -28,4 +29,6 @@ router.get("/find", verifyToken, findByUserID);
 //更新文章
 router.put("/update", verifyToken, validatePost, updateArticle);
 
+//超找Top文章
+router.get("/getTopPost", getTopPost);
 module.exports = router;

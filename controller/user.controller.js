@@ -11,7 +11,7 @@ const {
 } = require("../constant/success.type");
 
 // 导入createUser
-const { JWT_SECRET } = require("../config/config.default");
+const { JWT_SECRET, JWT_EXPIRED } = require("../config/config.default");
 const { postPublishError } = require("../constant/error.type");
 
 class UserController {
@@ -33,7 +33,7 @@ class UserController {
         ...userSuccessLogin,
         result: {
           ...result,
-          token: jwt.sign(result, JWT_SECRET, { expiresIn: "1d" }),
+          token: jwt.sign(result, JWT_SECRET, { expiresIn: JWT_EXPIRED }),
         },
       });
     } catch (err) {
