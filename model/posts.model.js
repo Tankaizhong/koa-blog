@@ -1,10 +1,10 @@
 // 1. 导入seq的连接
 const { DataTypes } = require("sequelize");
-const seq = require("../db/seq");
+const sequelize = require("../db/seq");
 const User = require("./user.model");
 
 // 定义 Posts 模型
-const Posts = seq.define(
+const Posts = sequelize.define(
   "Posts",
   {
     PostID: {
@@ -46,8 +46,8 @@ const Posts = seq.define(
   },
   {
     tableName: "Posts", // 可以指定表名
-    timestamps: false, // 不自动添加 createdAt 和 updatedAt 字段
-  }
+    timestamps: true, // 不自动添加 createdAt 和 updatedAt 字段
+  },
 );
 
 // 定义与 Users 模型的外键关联
@@ -57,13 +57,5 @@ Posts.belongsTo(User, {
     allowNull: false, // 设置为false表示UserID不能为空
   },
 });
-seq
-  .sync()
-  .then(() => {
-    console.log("数据库同步完成");
-  })
-  .catch((err) => {
-    console.error("数据库同步失败", err);
-  });
 
 module.exports = Posts; // 导出 Posts 模型，以便在其他文件中使用

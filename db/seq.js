@@ -13,6 +13,7 @@ const {
 const seq = new Sequelize(MYSQL_DB, MYSQL_USER, MYSQL_PWD, {
   host: MYSQL_HOST,
   dialect: "mysql", // 选择你使用的数据库类型
+  timezone: "+08:00", // 设置为数据库的时区
 });
 
 seq
@@ -24,6 +25,5 @@ seq
     console.log("数据库连接失败", err);
   });
 // 自动创建数据库表
-
 
 module.exports = seq;
