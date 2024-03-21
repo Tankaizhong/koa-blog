@@ -1,7 +1,7 @@
 const express = require("express");
 // 路由前缀
 const router = express.Router({
-  prefix: "/users",
+  prefix: "/user",
 });
 
 //中间件
@@ -11,10 +11,10 @@ const {
   verifyLogin,
   crpytPassword,
 } = require("../middleware/user.middleware");
-const { verifyToken } = require("../middleware/auth.middleware");
+const {verifyToken} = require("../middleware/auth.middleware");
 
 // control 层注册
-const { login, register } = require("../controller/user.controller");
+const {login, register, fetchCategorieslist} = require("../controller/user.controller");
 const {
   publish,
   findByUserID,
@@ -37,4 +37,6 @@ router.post("/register", userValidator, verifyUser, crpytPassword, register);
 //登陆接口
 router.post("/login", userValidator, verifyLogin, login);
 
+//列表接口
+router.get("/categoriesList", fetchCategorieslist)
 module.exports = router;

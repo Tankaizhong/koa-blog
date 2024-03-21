@@ -1,6 +1,7 @@
 // 1. 导入seq的连接
 const { DataTypes } = require("sequelize");
 const sequelize = require("../db/seq");
+const User = require("./user.model");
 //分类表，存储博文分类信息
 const Category = sequelize.define(
   "Category",
@@ -41,5 +42,6 @@ Category.belongsTo(Category, {
   as: "ParentCategory",
   onDelete: "CASCADE",
 });
+Category.belongsTo(User, { foreignKey: 'UserID' }); // 建立外键关系，每个分类属于一个用户
 
 module.exports = Category;

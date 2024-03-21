@@ -6,11 +6,11 @@
 const app = require("../app");
 const debug = require("debug")("koa-blog:server");
 const http = require("http");
-
+const {PORT, PROJECT_PORT} = require("../constant/config");
 /**
  * Get port from environment and store in Express.
  */
-const port = normalizePort(process.env.PORT || "3000");
+const port = normalizePort(process.env.PORT || PROJECT_PORT);
 console.log(`server is running on http://localhost:${port}`);
 app.set("port", port);
 
@@ -94,12 +94,13 @@ const categories = require("../model/categories.model");
 const tag = require("../model/tags.model");
 const postTags = require("../model/postTags.model");
 const PostCategories = require("../model/PostCategories.model");
+
 // 同步数据库结构
-// sequelize
-//   .sync({ alter: true })
-//   .then(() => {
-//     console.log('数据库同步完成')
-//   })
-//   .catch((err) => {
-//     console.error('数据库同步失败', err)
-//   })
+sequelize
+    .sync({alter: true})
+    .then(() => {
+      console.log('数据库同步完成')
+    })
+    .catch((err) => {
+      console.error('数据库同步失败', err)
+    })

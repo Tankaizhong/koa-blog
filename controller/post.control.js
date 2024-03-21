@@ -6,7 +6,7 @@ const {
 const { userSuccessPublish } = require("../constant/success.type");
 const { findPostByUserID } = require("../service/post.service");
 const {
-  publishArticle,
+  publishPost,
   updateArticle,
   findTopPost,
 } = require("../service/post.service");
@@ -22,7 +22,8 @@ class PostController {
    */
   async publish(req, res, next) {
     try {
-      const result = await publishArticle(req.body);
+      console.log(req.body)
+      const result = await publishPost(req.body);
       res.status(200).json({
         ...userSuccessPublish,
         ...result,

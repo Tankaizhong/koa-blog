@@ -7,10 +7,11 @@ const Categories = require("../model/categories.model");
 
 class TagsService {
   // 更新标签和分类的逻辑
-  async updateTagsAndCategories(postID, tagNames, categoryNames) {
+  async updateTagsAndCategories(postID, TagNames, categoryNames) {
     // 如果tagNames为空，则设置默认值为['defaultTag']
-    if (!tagNames || tagNames.length === 0) {
-      tagNames = ["技术"];
+    console.log(postID, "postID", TagNames, "tagNames", categoryNames, "categoryNames")
+    if (!TagNames || TagNames.length === 0) {
+      TagNames = ["技术"];
     }
 
     // 如果categoryNames为空，则设置默认值为['defaultCategory']
@@ -24,7 +25,7 @@ class TagsService {
       transaction = await sequelize.transaction({ timeout: 30000 });
 
       // 更新标签
-      const tagIDs = await this.updateTags(postID, tagNames, transaction);
+      const tagIDs = await this.updateTags(postID, TagNames, transaction);
 
       // 更新分类
       const categoryIDs = await this.updateCategories(
@@ -57,7 +58,7 @@ class TagsService {
         tag = await Tags.create({ TagName: tagName }, { transaction });
       }
       tagIDs.push(tag.TagID);
-      console.log(tag.TagID, "tag");
+      // console.log(tag.TagID, "tag");
     }
     return tagIDs;
   }

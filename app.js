@@ -3,7 +3,7 @@ const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
-
+const cors = require('cors');//跨域
 //路由管理
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users.route");
@@ -25,12 +25,18 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
+//跨域问题
+app.use(cors({
+  origin: '*'
+}));
+
 //路由使用
 app.use("/", indexRouter);
-app.use("/users", usersRouter);
+app.use("/user", usersRouter);
 app.use("/posts", postsRouter);
 app.use("/test", testRouter);
 app.use("/admin", adminRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

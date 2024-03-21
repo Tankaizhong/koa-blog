@@ -1,7 +1,7 @@
 const Posts = require("../model/posts.model");
 const User = require("../model/user.model");
 const sequelize = require("../db/seq");
-const tagService = require("./tag.service");
+const {updateTagsAndCategories} = require("./tag.service");
 
 class PostService {
   /**
@@ -9,7 +9,7 @@ class PostService {
    * @param {*} userID 用户ID
    * @param {*} title  标题
    */
-  async findPostByUserID({ UserID, Title }) {
+  async findPostByUserID({UserID, Title}) {
     try {
       // 查询数据库，查找符合条件的文章
       const posts = await Posts.findAll({
@@ -42,36 +42,36 @@ class PostService {
    * @param {*} param0
    */
   // 在发布文章的函数中调用更新标签和分类的逻辑
-  async publishArticle({
-    Title,
-    Content,
-    user: { UserID: UserID },
-    Tags,
-    Categories,
-  }) {
+  async publishPost({
+                      Title,
+                      Content,
+                      user: {UserID: UserID},
+                      TagName,
+                      Categories,
+                    }) {
     let transaction;
+    // console.log(TagName,"1111111");
     try {
       // 开启事务
       transaction = await sequelize.transaction();
-
       // 创建文章
       const newPost = await Posts.create(
-        {
-          Title,
-          Content,
-          UserID,
-          Likes: 0,
-          Replies: 0,
-          Views: 0,
-        },
-        { transaction },
+          {
+            Title,
+            Content,
+            UserID,
+            Likes: 0,
+            Replies: 0,
+            Views: 0,
+          },
+          {transaction},
       );
-      // console.log(newPost.PostID, "newPost.dataValues")
+      console.log(newPost.dataValues, "newPost.dataValues")
       // 调用更新标签和分类的函数
-      await tagService.updateTagsAndCategories(
-        newPost.PostID,
-        Tags,
-        Categories,
+      await updateTagsAndCategories(
+          newPost.PostID,
+          TagName,
+          Categories,
       );
 
       // 提交事务
@@ -90,7 +90,7 @@ class PostService {
    * @param {*} postID 文章ID
    * @param {*} updatedData 更新的数据
    */
-  async updatePost({ PostID, updatedData }) {
+  async updatePost({PostID, updatedData}) {
     try {
       const [rowsAffected, [updatedPost]] = await Posts.update(updatedData, {
         where: {
@@ -109,7 +109,7 @@ class PostService {
   }
 
   //判断是否重复发布文章
-  async findUserPostsByTitle({ UserID, Title }) {
+  async findUserPostsByTitle({UserID, Title}) {
     try {
       const existingArticle = await Posts.findOne({
         where: {
@@ -131,6 +131,7 @@ class PostService {
       throw error;
     }
   }
+
   /**
    * 查找top文章
    * @returns
@@ -148,4 +149,5 @@ class PostService {
     }
   }
 }
+
 module.exports = new PostService();
