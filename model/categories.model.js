@@ -36,12 +36,6 @@ const Category = sequelize.define(
   },
 );
 
-// 建立与自身的关联关系，表示父分类ID
-Category.belongsTo(Category, {
-  foreignKey: "ParentCategoryID",
-  as: "ParentCategory",
-  onDelete: "CASCADE",
-});
-Category.belongsTo(User, { foreignKey: 'UserID' }); // 建立外键关系，每个分类属于一个用户
+
 
 module.exports = Category;

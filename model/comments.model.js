@@ -32,17 +32,6 @@ const Comment = sequelize.define(
   },
 );
 
-// 建立与 User 模型的关联关系
-Comment.belongsTo(User, { foreignKey: "UserID", onDelete: "CASCADE" });
 
-// 建立与 Post 模型的关联关系
-Comment.belongsTo(Posts, { foreignKey: "PostID", onDelete: "CASCADE" });
-
-// 建立与自身的关联关系，表示父评论ID
-Comment.belongsTo(Comment, {
-  foreignKey: "ParentCommentID",
-  as: "ParentComment",
-  onDelete: "CASCADE",
-});
 
 module.exports = Comment;

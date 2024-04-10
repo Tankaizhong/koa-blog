@@ -2,7 +2,7 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../db/seq");
 const User = require("./user.model");
-
+const Tags = require("./tags.model");
 // 定义 Posts 模型
 const Posts = sequelize.define(
   "Posts",
@@ -50,12 +50,8 @@ const Posts = sequelize.define(
   },
 );
 
-// 定义与 Users 模型的外键关联
-Posts.belongsTo(User, {
-  foreignKey: {
-    name: "UserID",
-    allowNull: false, // 设置为false表示UserID不能为空
-  },
-});
+
+
+
 
 module.exports = Posts; // 导出 Posts 模型，以便在其他文件中使用

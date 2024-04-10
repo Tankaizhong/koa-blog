@@ -19,7 +19,14 @@ const {
   publish,
   findByUserID,
   updateArticle,
+
 } = require("../controller/post.control");
+const {
+  fetchPostList,
+} = require("../controller/user.controller");
+
+
+
 
 const {
   validatePost,
@@ -39,4 +46,10 @@ router.post("/login", userValidator, verifyLogin, login);
 
 //列表接口
 router.get("/categoriesList", fetchCategorieslist)
+
+//更具用户ID获得文章
+router.get("/postList",verifyToken, fetchPostList)
+
+
+
 module.exports = router;

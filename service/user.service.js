@@ -1,6 +1,7 @@
 const User = require("../model/user.model");
 const Post = require("../model/posts.model");
 const Categories = require("../model/categories.model");
+
 class UserService {
   /**
    * 创建用户
@@ -61,6 +62,36 @@ class UserService {
       throw error;
     }
   }
+
+  async getPostList(userID) {
+    try {
+      // 假设您的 Post 模型定义为 Post，并且与 User 模型存在一对多关系
+      // 假设您的 User 模型定义为 User，每个用户有多篇文章
+      const user = await User.findByPk(userID); // 根据用户 ID 查询用户信息
+      if (!user) {
+        throw new Error('用户不存在');
+      }
+
+      // 假设您的文章模型为 Post，与用户模型存在外键关系，用于关联用户的文章
+      const userPosts = await Post.findAll({
+        where: {UserID: userID}, // 根据用户 ID 查询该用户的文章
+        include: [
+          {
+            model:User,
+            attributes: [],
+          }
+        ], // 关联用户信息，如果需要的话
+        order: [['createdAt', 'DESC']], // 根据创建时间降序排列文章
+        // attributes: ['Title','Views','Likes','Replies'],
+      });
+      return userPosts; // 返回用户的文章列表数据
+    } catch (error) {
+      console.error('获取用户文章列表失败', error);
+      throw error; // 抛出错误，以便在调用方处理错误
+    }
+  }
+
+
 }
 
 module.exports = new UserService();

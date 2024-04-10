@@ -74,4 +74,6 @@ const Users = seq.define(
   },
 );
 
+
+
 module.exports = Users;

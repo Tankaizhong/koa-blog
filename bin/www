@@ -86,21 +86,19 @@ function onListening() {
 /**
  * 自动创建数据表
  */
-const sequelize = require("../db/seq");
-const user = require("../model/user.model");
-const posts = require("../model/posts.model");
-const comments = require("../model/comments.model");
-const categories = require("../model/categories.model");
-const tag = require("../model/tags.model");
-const postTags = require("../model/postTags.model");
-const PostCategories = require("../model/PostCategories.model");
+const sequelize = require('../db/seq');
+// console.log(sequelize)
+const associations = require('../db/associations');
+
 
 // 同步数据库结构
-sequelize
-    .sync({alter: true})
-    .then(() => {
-      console.log('数据库同步完成')
-    })
-    .catch((err) => {
-      console.error('数据库同步失败', err)
-    })
+// 建立数据库表和关联关系
+// (async () => {
+//   try {
+//     // 同步数据库，包括创建表和建立关联关系
+//     await sequelize.sync({force: true}); // 设置 force: true 表示每次同步都会先删除已存在的表再重新创建
+//     console.log('Database synchronized');
+//   } catch (error) {
+//     console.error('Error synchronizing database:', error);
+//   }
+// })();

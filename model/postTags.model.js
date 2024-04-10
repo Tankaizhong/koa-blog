@@ -1,11 +1,11 @@
-// models/postTag.model.js
+// models/PostTags.model.js
 const { DataTypes } = require("sequelize");
 const sequelize = require("../db/seq");
 const Post = require("./posts.model");
 const Tag = require("./tags.model");
 //博文与分类的多对多
-const PostTag = sequelize.define(
-  "PostTag",
+const PostTags = sequelize.define(
+  "PostTags",
   {
     // PostTags 模型的字段定义
     PostID: {
@@ -27,21 +27,6 @@ const PostTag = sequelize.define(
   },
 );
 
-// 建立与 Posts 模型的关联关系
-PostTag.belongsTo(Post, { foreignKey: "PostID", onDelete: "CASCADE" });
 
-// 建立与 Tags 模型的关联关系
-PostTag.belongsTo(Tag, { foreignKey: "TagID", onDelete: "CASCADE" });
 
-Post.belongsToMany(Tag, {
-  through: PostTag,
-  foreignKey: "PostID",
-  otherKey: "TagID",
-});
-Tag.belongsToMany(Post, {
-  through: PostTag,
-  foreignKey: "TagID",
-  otherKey: "PostID",
-});
-
-module.exports = PostTag;
+module.exports = PostTags;

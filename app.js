@@ -10,7 +10,7 @@ const usersRouter = require("./routes/users.route");
 const postsRouter = require("./routes/posts.router");
 const testRouter = require("./routes/test.router");
 const adminRouter = require("./routes/admin.router");
-
+const likeRouter = require("./routes/like.router")
 const app = express();
 //使用koa-body中间件
 
@@ -21,7 +21,7 @@ app.set("view engine", "jade");
 app.use(logger("dev"));
 app.use(express.json());
 
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
@@ -36,7 +36,7 @@ app.use("/user", usersRouter);
 app.use("/posts", postsRouter);
 app.use("/test", testRouter);
 app.use("/admin", adminRouter);
-
+app.use("/like", likeRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

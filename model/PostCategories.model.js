@@ -23,21 +23,4 @@ const PostCategory = sequelize.define(
   },
 );
 
-PostCategory.belongsTo(Posts, { foreignKey: "PostID", onDelete: "CASCADE" });
-PostCategory.belongsTo(Categories, {
-  foreignKey: "CategoryID",
-  onDelete: "CASCADE",
-});
-
-Posts.belongsToMany(Categories, {
-  through: PostCategory,
-  foreignKey: "PostID",
-  otherKey: "CategoryID",
-});
-Categories.belongsToMany(Posts, {
-  through: PostCategory,
-  foreignKey: "CategoryID",
-  otherKey: "PostID",
-});
-
 module.exports = PostCategory;

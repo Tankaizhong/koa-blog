@@ -1,6 +1,6 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../db/seq");
-const Tag = sequelize.define(
+const Tags = sequelize.define(
   "Tag",
   {
     // 标签模型的字段定义
@@ -31,4 +31,4 @@ const Tag = sequelize.define(
   },
 );
 
-module.exports = Tag;
+module.exports = Tags;
