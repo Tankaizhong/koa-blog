@@ -67,13 +67,24 @@ const Users = seq.define(
       defaultValue: 0,
       comment: "是否为管理员, 0: 不是管理员(默认); 1: 是管理员",
     },
+    //增加最后一次登陆时间
+    LastLoginTime: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      comment: "最后一次登陆时间",
+    },
+    //登陆次数
+    LoginCount: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      comment: "登陆次数",
+      defaultValue: 0,
+    },
   },
   {
     tableName: "Users", // 可以指定表名
     timestamps: true, // 不自动添加 createdAt 和 updatedAt 字段
   },
 );
-
-
 
 module.exports = Users;

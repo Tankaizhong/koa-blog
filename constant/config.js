@@ -1,3 +1,3 @@
 module.exports = {
-  PROJECT_PORT: "3000"
-}
+  PROJECT_PORT: "3000",
+};

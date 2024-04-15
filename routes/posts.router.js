@@ -4,8 +4,6 @@ const {
   checkDuplicateArticle,
 } = require("../middleware/post.middleware");
 
-
-
 const {
   publish,
   findByUserID,
@@ -15,9 +13,11 @@ const {
   addLike,
   addView,
   fetchCategories,
-  fetchTags
+  fetchTags,
+  fetchPostByCategory,
 } = require("../controller/post.control");
 const express = require("express");
+const { checkUserLiked } = require("../controller/like.control");
 const router = express.Router({
   prefix: "/posts",
 });
@@ -38,27 +38,21 @@ router.get("/find", verifyToken, findByUserID);
 router.put("/update", verifyToken, validatePost, updateArticle);
 
 //查找Top文章
-router.get("/getTopPost", getTopPost);
-
+router.post("/getTopPost", getTopPost);
 
 // 增加点赞的路由
-router.post('/like',verifyToken, addLike);
+router.post("/like", verifyToken, addLike);
 
 // 增加浏览量的路由
-router.post('/view', addView);
-
+router.post("/view", addView);
 
 //获取文章分类的
-router.get('/fetchCategories', fetchCategories);
-router.get('/fetchTags', fetchTags);
+router.get("/fetchCategories", fetchCategories);
+router.get("/fetchTags", fetchTags);
 
-
-
-
+router.post("/fetchPostByCategory", fetchPostByCategory);
 
 //获取指定文章,最后一个
-router.get('/:PostID',getPostByPostID)
-
-
+router.get("/:PostID", getPostByPostID);
 
 module.exports = router;

@@ -3,7 +3,8 @@ const express = require("express");
 const router = express.Router({
   prefix: "/user",
 });
-
+//上传文件
+const upload = require("../config/multerConfig"); // 引入Multer配置文件
 //中间件
 const {
   userValidator,
@@ -11,22 +12,22 @@ const {
   verifyLogin,
   crpytPassword,
 } = require("../middleware/user.middleware");
-const {verifyToken} = require("../middleware/auth.middleware");
+const { verifyToken } = require("../middleware/auth.middleware");
 
 // control 层注册
-const {login, register, fetchCategorieslist} = require("../controller/user.controller");
+const {
+  login,
+  register,
+  fetchCategoriesList,
+  uploadAvatar,
+  fetchPostList,
+  updateUser,
+} = require("../controller/user.controller");
 const {
   publish,
   findByUserID,
   updateArticle,
-
 } = require("../controller/post.control");
-const {
-  fetchPostList,
-} = require("../controller/user.controller");
-
-
-
 
 const {
   validatePost,
@@ -45,11 +46,15 @@ router.post("/register", userValidator, verifyUser, crpytPassword, register);
 router.post("/login", userValidator, verifyLogin, login);
 
 //列表接口
-router.get("/categoriesList", fetchCategorieslist)
+router.get("/categoriesList", fetchCategoriesList);
 
 //更具用户ID获得文章
-router.get("/postList",verifyToken, fetchPostList)
+router.get("/postList", verifyToken, fetchPostList);
 
+//更新用户信息
+router.post("/updateUserInfor", verifyToken, updateUser);
 
+//上传头像
+router.post("/uploadAvatar", upload.single("file"), verifyToken, uploadAvatar);
 
 module.exports = router;

@@ -21,10 +21,10 @@ const validatePost = async (req, res, next) => {
   const { Title, Content, TagName } = req.body;
   console.log(req.body, "req.body");
   // 检查 title 和 content 和 Tag 是否为空,switch选择
-  console.log(req.body)
+  console.log(req.body);
   if (!Title || !Content || !TagName) {
     //返回错误
-    if(!Title || !Content)res.status(400).json(postContentError);
+    if (!Title || !Content) res.status(400).json(postContentError);
     else res.status(400).json(postTagError);
     return;
   }

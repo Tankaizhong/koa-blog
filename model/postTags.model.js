@@ -27,6 +27,4 @@ const PostTags = sequelize.define(
   },
 );
 
-
-
 module.exports = PostTags;

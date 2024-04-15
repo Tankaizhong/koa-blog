@@ -28,11 +28,6 @@ const Posts = sequelize.define(
       allowNull: true,
       comment: "博文内容",
     },
-    Likes: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      comment: "点赞数",
-    },
     Replies: {
       type: DataTypes.INTEGER,
       allowNull: true,
@@ -49,9 +44,5 @@ const Posts = sequelize.define(
     timestamps: true, // 不自动添加 createdAt 和 updatedAt 字段
   },
 );
-
-
-
-
 
 module.exports = Posts; // 导出 Posts 模型，以便在其他文件中使用

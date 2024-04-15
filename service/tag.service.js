@@ -13,7 +13,14 @@ class TagsService {
   // 更新标签和分类的逻辑
   async updateTagsAndCategories(postID, TagNames, CategoryNames) {
     // 如果tagNames为空，则设置默认值为['defaultTag']
-    console.log(postID, "postID", TagNames, "tagNames", CategoryNames, "categoryNames")
+    console.log(
+      postID,
+      "postID",
+      TagNames,
+      "tagNames",
+      CategoryNames,
+      "categoryNames",
+    );
     if (!TagNames || TagNames.length === 0) {
       TagNames = ["技术"];
     }
@@ -26,8 +33,8 @@ class TagsService {
     let transaction;
     try {
       // 开启事务
-      transaction = await sequelize.transaction({timeout: 30000});
-      console.log(this, "11111111111111111111")
+      transaction = await sequelize.transaction({ timeout: 30000 });
+      console.log(this, "11111111111111111111");
       // 更新标签
       //const tagIDs = await this.updateTags(postID, TagNames, transaction);
 
@@ -54,12 +61,12 @@ class TagsService {
     const tagIDs = [];
     for (const tagName of tagNames) {
       let tag = await Tags.findOne({
-        where: {TagName: tagName},
+        where: { TagName: tagName },
         transaction,
       });
 
       if (!tag) {
-        tag = await Tags.create({TagName: tagName}, {transaction});
+        tag = await Tags.create({ TagName: tagName }, { transaction });
       }
       tagIDs.push(tag.TagID);
       // console.log(tag.TagID, "tag");
@@ -71,13 +78,13 @@ class TagsService {
     const categoryIDs = [];
     for (const categoryName of CategoryNames) {
       let category = await Categories.findOne({
-        where: {CategoryName: categoryName},
+        where: { CategoryName: categoryName },
         transaction,
       });
       if (!category) {
         category = await Categories.create(
-            {CategoryName: categoryName},
-            {transaction},
+          { CategoryName: categoryName },
+          { transaction },
         );
       }
       categoryIDs.push(category.CategoryID);
