@@ -82,7 +82,8 @@ class PostController {
   //getTopPost
   async getTopPost(req, res, next) {
     try {
-      const topPost = await getTopPost(req.body);
+      const { CategoryID } = req.body;
+      const topPost = await getTopPost(CategoryID);
       // console.log(topPost)
       res.status(200).json({ success: true, data: topPost });
     } catch (error) {
@@ -99,7 +100,8 @@ class PostController {
         return res.status(404).json({ message: "文章不存在" });
       }
       // 如果找到文章，则将其发送给客户端
-      res.status(200).json(post);
+      const likeCount = post.Likes ? post.Likes.length : 0;
+      res.status(200).json({ ...post.dataValues, Likes: likeCount });
     } catch (error) {
       console.error("获取文章详情失败", error);
       res.status(500).json({ message: "获取文章详情失败" });
@@ -145,6 +147,7 @@ class PostController {
       if (!Categories) {
         return res.status(404).json({ message: "分类不存在" });
       }
+      // console.log(Categories)
       // 返回成功的响应
       res.status(200).json(Categories);
     } catch (error) {

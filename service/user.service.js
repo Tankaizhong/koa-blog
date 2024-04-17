@@ -106,7 +106,7 @@ class UserService {
 
   async updateUserInfo(updateData) {
     const { Username, ...updateFields } = updateData;
-    console.log(Username, updateFields, "11111111111111111");
+    // console.log(Username, updateFields, "11111111111111111");
     try {
       let user = await User.findOne({ where: { Username } });
       // console.log(user,'11111111111111')

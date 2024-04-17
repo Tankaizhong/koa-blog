@@ -28,7 +28,7 @@ class LikeService {
           PostID,
         },
       });
-      console.log(like);
+      // console.log(like);
       return like !== null;
     } catch (error) {
       console.error("检查用户点赞状态失败", error);

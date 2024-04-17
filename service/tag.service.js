@@ -34,7 +34,7 @@ class TagsService {
     try {
       // 开启事务
       transaction = await sequelize.transaction({ timeout: 30000 });
-      console.log(this, "11111111111111111111");
+      // console.log(this, "11111111111111111111");
       // 更新标签
       //const tagIDs = await this.updateTags(postID, TagNames, transaction);
 

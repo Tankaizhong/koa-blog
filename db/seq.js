@@ -1,4 +1,5 @@
 const { Sequelize } = require("sequelize");
+
 //用户数据配置
 const {
   MYSQL_HOST,

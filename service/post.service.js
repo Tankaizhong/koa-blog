@@ -1,5 +1,5 @@
 const sequelize = require("../db/seq");
-
+const { Op } = require("@sequelize/core");
 const {
   User,
   PostCategories,
@@ -136,10 +136,7 @@ class PostService {
    * 查找top文章
    * @returns
    */
-  async getTopPost(data) {
-    const { CategoryID } = data;
-    // console.log(CategoryID,'11111111111111111111')
-    // const {} = data;
+  async getTopPost(CategoryID) {
     try {
       // 构建查询条件
       const queryOptions = {
@@ -160,11 +157,20 @@ class PostService {
 
       // 判断是否存在分类ID，如果有则添加关联条件
       if (CategoryID) {
-        queryOptions.include.push({
-          model: Categories, // 关联中间表
-          where: { CategoryID }, // 添加关联条件
-          attributes: [],
-        });
+        // 检查是否是热门分类
+        const category = await Categories.findByPk(CategoryID);
+        if (category && category.CategoryName === "热门") {
+          // 如果是热门分类，则直接查询热门文章
+          const topPosts = await Posts.findAll(queryOptions);
+          return topPosts;
+        } else {
+          // 否则，在查询条件中添加分类筛选条件
+          queryOptions.include.push({
+            model: Categories, // 关联中间表
+            where: { CategoryID }, // 添加关联条件
+            attributes: [],
+          });
+        }
       }
       const topPosts = await Posts.findAll(queryOptions);
 
@@ -172,7 +178,6 @@ class PostService {
       return topPosts;
     } catch (error) {
       console.log(error);
-      console.log("错误");
       throw error;
     }
   }
@@ -220,9 +225,12 @@ class PostService {
   async findPostByPostID(postID) {
     // console.log(postID)
     const num = parseInt(postID.match(/\d+/)[0], 10);
-    console.log(num);
+    // console.log(num);
     try {
-      const post = await Posts.findOne({ where: { postID: num } });
+      const post = await Posts.findOne({
+        where: { postID: num },
+        include: [{ model: Like, as: "Likes" }],
+      });
       return post;
     } catch (error) {
       console.error("查找文章失败", error);
@@ -286,6 +294,9 @@ class PostService {
     try {
       const categories = await Categories.findAll({
         attributes: ["CategoryID", "CategoryName"],
+        where: {
+          CategoryName: { [Op.not]: "热门" },
+        },
       });
       // console.log(categories)
       return categories;

@@ -17,6 +17,7 @@ const {
 const { JWT_SECRET, JWT_EXPIRED } = require("../config/config.default");
 const { postPublishError } = require("../constant/error.type");
 const path = require("path");
+const { PROJECT_PORT } = require("../constant/config");
 
 class UserController {
   /**
@@ -97,9 +98,14 @@ class UserController {
   }
 
   async uploadAvatar(req, res, next) {
+    // console.log(req)
     try {
       // 如果成功上传文件，则在 req.file 中会包含上传的文件信息
       if (req.file) {
+        // console.log(req.file,'1112345566')
+
+        const imageUrl = `http://localhost:${PROJECT_PORT}/${req.file.filename}`;
+
         // 获取上传文件的绝对路径
         const absoluteFilePath = path.resolve(
           __dirname,
@@ -108,14 +114,14 @@ class UserController {
         );
         const result = await updateUserInfo({
           ...req.body.user,
-          Avatar: absoluteFilePath,
+          Avatar: imageUrl,
         });
         // console.log(result)
         // 在这里执行其他逻辑，比如保存文件信息到数据库或者返回上传成功的响应
         res.json({
           success: true,
           message: "File uploaded successfully",
-          absoluteFilePath,
+          imageUrl,
         });
       } else {
         // 如果没有上传文件，则返回上传失败的响应
@@ -134,6 +140,7 @@ class UserController {
       // 从请求体中获取需要更新的用户信息
       const { Username } = req.body.user;
       const updateFields = req.body.updateInfor;
+      // console.log(updateFields)
       const user = await getUserInfo(req.body.user);
       const result = await updateUserInfo(updateFields);
       // 更新用户信息
