@@ -15,6 +15,7 @@ const {
   fetchCategories,
   fetchTags,
   fetchPostByCategory,
+  findBySearch,
 } = require("../controller/post.control");
 const express = require("express");
 const { checkUserLiked } = require("../controller/like.control");
@@ -51,6 +52,9 @@ router.get("/fetchCategories", fetchCategories);
 router.get("/fetchTags", fetchTags);
 
 router.post("/fetchPostByCategory", fetchPostByCategory);
+
+//用户搜索的文章
+router.post("/search", findBySearch);
 
 //获取指定文章,最后一个
 router.get("/:PostID", getPostByPostID);

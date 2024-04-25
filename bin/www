@@ -7,6 +7,7 @@ const app = require("../app");
 const debug = require("debug")("koa-blog:server");
 const http = require("http");
 const { PORT, PROJECT_PORT } = require("../constant/config");
+
 /**
  * Get port from environment and store in Express.
  */
@@ -87,9 +88,9 @@ function onListening() {
  * 自动创建数据表
  */
 const sequelize = require("../db/seq");
-// console.log(sequelize)
-const associations = require("../db/associations");
 
+const associations = require("../db/associations");
+const trigger = require("../db/trigger");
 // 同步数据库结构
 // 建立数据库表和关联关系
 // (async () => {

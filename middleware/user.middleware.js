@@ -20,11 +20,12 @@ const { getUserInfo } = require("../service/user.service");
  */
 const crpytPassword = async (req, res, next) => {
   const { Password } = req.body;
+
   const salt = bcrypt.genSaltSync(10);
   // hash保存的是 密文
   const hash = bcrypt.hashSync(Password, salt);
   req.body.Password = hash;
-  console.log("密码加密成功", req);
+  // console.log("密码加密成功", req);
   await next();
 };
 

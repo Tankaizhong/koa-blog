@@ -1,20 +1,19 @@
 // like.control.js
 
 const {
-  createLike,
+  createPostLike,
   checkUserLiked,
   cancelLike,
-
   updatePostLikes,
 } = require("../service/like.service");
+const { Like } = require("../db/associations");
 
 class LikeControl {
-  async addLike(req, res, next) {
+  async addPostLike(req, res, next) {
     const { PostID } = req.body;
     const { UserID } = req.body.user;
     try {
-      const like = await createLike(UserID, PostID);
-
+      const like = await createPostLike(UserID, PostID);
       res.status(201).json({ message: "点赞成功", like });
     } catch (error) {
       console.error("点赞失败", error);
@@ -38,6 +37,31 @@ class LikeControl {
     try {
       await cancelLike(UserID, PostID);
       res.status(200).json({ message: "取消点赞成功" });
+    } catch (error) {
+      console.error("取消点赞失败", error);
+      res.status(500).json({ message: "取消点赞失败" });
+    }
+  }
+
+  async addCommentLike(req, res, next) {
+    const { CommentID } = req.body;
+    const { UserID } = req.body.user;
+    try {
+      const existingLike = await Like.findOne({
+        where: {
+          CommentID,
+          UserID,
+        },
+      });
+      if (existingLike) {
+        // 如果已经点赞了，则取消点赞
+        await existingLike.destroy();
+        res.status(200).json({ message: "取消点赞成功" });
+      } else {
+        // 如果尚未点赞，则添加点赞记录
+        await Like.create({ CommentID, UserID });
+        res.status(200).json({ message: "点赞成功" });
+      }
     } catch (error) {
       console.error("取消点赞失败", error);
       res.status(500).json({ message: "取消点赞失败" });

@@ -18,7 +18,8 @@ const { JWT_SECRET, JWT_EXPIRED } = require("../config/config.default");
 const { postPublishError } = require("../constant/error.type");
 const path = require("path");
 const { PROJECT_PORT } = require("../constant/config");
-
+const { User } = require("../db/associations");
+const fs = require("fs");
 class UserController {
   /**
    * 登陆
@@ -98,40 +99,44 @@ class UserController {
   }
 
   async uploadAvatar(req, res, next) {
-    // console.log(req)
     try {
-      // 如果成功上传文件，则在 req.file 中会包含上传的文件信息
       if (req.file) {
-        // console.log(req.file,'1112345566')
+        const newAvatarPath = req.file.path; // 获取新上传头像的路径
+        const { UserID } = req.body.user;
 
-        const imageUrl = `http://localhost:${PROJECT_PORT}/${req.file.filename}`;
+        // 获取用户旧头像路径
+        const user = await User.findByPk(UserID);
 
-        // 获取上传文件的绝对路径
-        const absoluteFilePath = path.resolve(
-          __dirname,
-          "../uploads/",
-          req.file.filename,
-        );
-        const result = await updateUserInfo({
-          ...req.body.user,
-          Avatar: imageUrl,
+        const oldAvatarPath = user.dataValues.Avatar;
+        // console.log(oldAvatarPath)
+        // 更新用户头像信息
+        await user.update({
+          Avatar: `http://localhost:${PROJECT_PORT}/${req.file.filename}`,
         });
-        // console.log(result)
-        // 在这里执行其他逻辑，比如保存文件信息到数据库或者返回上传成功的响应
+
+        // 删除旧头像文件
+        if (oldAvatarPath) {
+          const avatarFileName = oldAvatarPath.substring(
+            oldAvatarPath.lastIndexOf("/") + 1,
+          );
+          const localAvatarPath = `D:\\User\\GP\\koa-blog\\uploads\\${avatarFileName}`;
+          fs.unlinkSync(localAvatarPath);
+          console.log("旧头像文件删除成功:", localAvatarPath);
+        }
+
+        // 返回上传成功的响应
         res.json({
           success: true,
-          message: "File uploaded successfully",
-          imageUrl,
+          message: "头像上传成功",
+          imageUrl: `http://localhost:${PROJECT_PORT}/${req.file.filename}`,
         });
       } else {
         // 如果没有上传文件，则返回上传失败的响应
-        res.status(400).json({ success: false, message: "No file uploaded" });
+        res.status(400).json({ success: false, message: "未上传文件" });
       }
     } catch (error) {
-      console.error("Error uploading file:", error);
-      res
-        .status(500)
-        .json({ success: false, message: "Failed to upload file" });
+      console.error("上传头像失败:", error);
+      res.status(500).json({ success: false, message: "上传头像失败，请重试" });
     }
   }
 

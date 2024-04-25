@@ -145,12 +145,16 @@ class PostService {
         include: [
           {
             model: User,
-            as: "author", // 指定关联的别名，以便后续访问
-            attributes: ["Username"], // 不返回中间表的其他属性
+            attributes: ["Nickname"], // 不返回中间表的其他属性
           },
           {
             model: Tags, // 关联中间表
             attributes: ["TagName"], // 不返回中间表的其他属性
+          },
+          {
+            model: Like, // 关联中间表
+            as: "Likes",
+            attributes: ["LikeID"], // 不返回中间表的其他属性
           },
         ],
       };
@@ -223,9 +227,7 @@ class PostService {
   }
 
   async findPostByPostID(postID) {
-    // console.log(postID)
     const num = parseInt(postID.match(/\d+/)[0], 10);
-    // console.log(num);
     try {
       const post = await Posts.findOne({
         where: { postID: num },

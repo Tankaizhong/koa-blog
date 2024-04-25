@@ -19,6 +19,9 @@ const {
 } = require("../service/post.service");
 const Posts = require("../model/posts.model");
 const tagService = require("../service/tag.service");
+const { Op } = require("@sequelize/core");
+const { User, Tags, Like } = require("../db/associations");
+const sequelize = require("sequelize");
 
 class PostController {
   /**
@@ -29,7 +32,7 @@ class PostController {
    */
   async publish(req, res, next) {
     try {
-      console.log(req.body);
+      // console.log(req.body);
       const result = await publishPost(req.body);
       res.status(200).json({
         ...userSuccessPublish,
@@ -81,6 +84,7 @@ class PostController {
 
   //getTopPost
   async getTopPost(req, res, next) {
+    console.log(req.body);
     try {
       const { CategoryID } = req.body;
       const topPost = await getTopPost(CategoryID);
@@ -199,6 +203,55 @@ class PostController {
       res
         .status(500)
         .json({ success: false, message: "Internal server error" });
+    }
+  }
+
+  async findBySearch(req, res, next) {
+    try {
+      const { Query } = req.body;
+      console.log(Query, "99999999");
+      // Find posts where title or content contains the keyword
+      const queryOptions = {
+        where: {
+          [Op.or]: [
+            sequelize.where(
+              sequelize.fn("UPPER", sequelize.col("Title")),
+              "LIKE",
+              `%${Query.toUpperCase()}%`,
+            ), // Title contains keyword
+            sequelize.where(
+              sequelize.fn("UPPER", sequelize.col("Content")),
+              "LIKE",
+              `%${Query.toUpperCase()}%`,
+            ), // Content contains keyword
+            sequelize.where(
+              sequelize.fn("UPPER", sequelize.col("User.Nickname")),
+              "LIKE",
+              `%${Query.toUpperCase()}%`,
+            ), // Author contains keyword
+          ],
+        },
+        order: [["views", "DESC"]], // 按照阅读量降序排列
+        include: [
+          {
+            model: User,
+            attributes: ["Nickname"], // 不返回中间表的其他属性
+          },
+          {
+            model: Tags, // 关联中间表
+            attributes: ["TagName"], // 不返回中间表的其他属性
+          },
+          {
+            model: Like, // 关联中间表
+            as: "Likes",
+            attributes: ["LikeID"], // 不返回中间表的其他属性
+          },
+        ],
+      };
+      const posts = await Posts.findAll(queryOptions);
+      res.json(posts);
+    } catch (error) {
+      next(error); // Pass any errors to the error handling middleware
     }
   }
 }

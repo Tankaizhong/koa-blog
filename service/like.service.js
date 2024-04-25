@@ -5,8 +5,8 @@ const { Posts } = require("../db/associations");
 const { updatePostLikes } = require("./post.service");
 
 class LikeService {
-  async createLike(UserID, PostID) {
-    // console.log(UserID, PostID,'111111111113333333333333333333333')
+  async createPostLike(UserID, PostID) {
+    // console.log(PostID, 'PostID099999999999999999999999')
     try {
       const like = await Like.create({
         UserID,
@@ -21,6 +21,7 @@ class LikeService {
   }
 
   async checkUserLiked(UserID, PostID) {
+    // console.log(PostID, 'PostID')
     try {
       const like = await Like.findOne({
         where: {

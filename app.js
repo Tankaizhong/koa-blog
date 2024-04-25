@@ -47,6 +47,7 @@ const likeRouter = require("./routes/like.router");
 const tagRouter = require("./routes/tag.router");
 const categoryRouter = require("./routes/category.router");
 const commentRouter = require("./routes/comment.router");
+const NotificationRouter = require("./routes/notification.router");
 const multer = require("multer");
 
 app.use("/", indexRouter);
@@ -58,6 +59,7 @@ app.use("/like", likeRouter);
 app.use("/tag", tagRouter);
 app.use("/category", categoryRouter);
 app.use("/comments", commentRouter);
+app.use("/notifications", NotificationRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

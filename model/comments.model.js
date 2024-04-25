@@ -27,5 +27,6 @@ const Comment = sequelize.define(
     timestamps: true, // 不自动添加 createdAt 和 updatedAt 字段
   },
 );
+//定义触发器
 
 module.exports = Comment;

@@ -1,6 +1,5 @@
 // associations.js
 // 导入所有模型
-
 const User = require("../model/user.model");
 const Tags = require("../model/tags.model");
 const PostTags = require("../model/postTags.model");
@@ -9,6 +8,7 @@ const Categories = require("../model/categories.model");
 const PostCategories = require("../model/postCategories.model");
 const Comments = require("../model/comments.model");
 const Like = require("../model/like.model");
+const Notification = require("../model/notification.model");
 
 // 定义关联关系
 User.hasMany(Posts, { as: "posts" });
@@ -103,6 +103,10 @@ Like.belongsTo(Posts, { foreignKey: "PostID", as: "Post" });
 Like.belongsTo(Comments, { foreignKey: "CommentID", as: "Comment" });
 // 建立与评论表的关联
 
+// 定义与用户模型的关联关系
+Notification.belongsTo(User, { foreignKey: "UserID", onDelete: "CASCADE" }); // 一个通知属于一个用户
+
+Notification.belongsTo(Like, { foreignKey: "TargetID", constraints: false });
 module.exports = {
   User,
   Tags,
@@ -112,4 +116,5 @@ module.exports = {
   PostCategories,
   Comments,
   Like,
+  Notification,
 };

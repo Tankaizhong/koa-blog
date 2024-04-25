@@ -66,11 +66,11 @@ class AdminService {
         CategoryDescription,
         ParentCategoryID,
       });
-      console.log(category);
+      // console.log(category);
     } catch (error) {
       // 捕获错误并将其传递给全局错误处理中间件
       console.log(error);
-      next(error);
+      // next(error);
     }
   }
 
@@ -105,7 +105,7 @@ class AdminService {
           whereClause[key] = user[key];
         }
       }
-      console.log(whereClause, "whereClause");
+      // console.log(whereClause, "whereClause");
       // 执行查询
       const foundUser = await User.findOne({ where: whereClause });
       return foundUser;
