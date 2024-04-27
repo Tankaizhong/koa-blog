@@ -9,7 +9,7 @@ const {
   publishPost,
   updateArticle,
   findTopPost,
-  getTopPost,
+  getPostByCategoryID,
   findPostByPostID,
   increaseLike,
   addViewToPost,
@@ -83,11 +83,11 @@ class PostController {
   }
 
   //getTopPost
-  async getTopPost(req, res, next) {
-    console.log(req.body);
+  async getPostByCategoryID(req, res, next) {
+    // console.log(req.body);
     try {
       const { CategoryID } = req.body;
-      const topPost = await getTopPost(CategoryID);
+      const topPost = await getPostByCategoryID(CategoryID);
       // console.log(topPost)
       res.status(200).json({ success: true, data: topPost });
     } catch (error) {
@@ -175,6 +175,7 @@ class PostController {
       res.status(500).json({ message: "获取标签失败" });
     }
   }
+
   async fetchPostList(req, res, next) {
     try {
       // 调用增加浏览量的函数
@@ -193,9 +194,7 @@ class PostController {
 
   async fetchPostByCategory(req, res, next) {
     try {
-      console.log(req.params);
       const { CategoryID } = req.body;
-      // console.log(req.body)
       const posts = await getPostsByCategory(CategoryID);
       res.json({ success: true, data: posts });
     } catch (error) {
@@ -203,6 +202,39 @@ class PostController {
       res
         .status(500)
         .json({ success: false, message: "Internal server error" });
+    }
+  }
+
+  //热门
+  async fetchTopPost(req, res, next) {
+    try {
+      const topPost = await findTopPost();
+      res.json({ success: true, data: topPost });
+    } catch (error) {
+      console.error("Error fetching top posts:", error);
+      res
+        .status(500)
+        .json({ success: false, message: "Internal server error" });
+    }
+  }
+
+  //删除文章
+  async deletePost(req, res, next) {
+    try {
+      const { PostID } = req.body;
+      const post = await Posts.findOne({
+        where: {
+          PostID: PostID,
+        },
+      });
+      if (!post) {
+        return res.status(404).json({ message: "文章不存在" });
+      }
+      await post.destroy();
+      res.status(200).json({ message: "文章删除成功" });
+    } catch (error) {
+      console.error("删除文章失败", error);
+      res.status(500).json({ message: "删除文章失败" });
     }
   }
 

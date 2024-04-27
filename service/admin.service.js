@@ -4,7 +4,11 @@ const {
   User,
   Categories,
   Tags,
+  PostCategories,
 } = require("../db/associations");
+
+const sequelize = require("sequelize");
+
 class AdminService {
   async findTagByTagName({ TagName }) {
     console.log(TagName, "TagName");
@@ -153,6 +157,34 @@ class AdminService {
       return totalViews;
     } catch (error) {
       throw error;
+    }
+  }
+
+  async getAllPostsGroupByCategory() {
+    try {
+      const categoriesWithPostCount = await Categories.findAll({
+        attributes: [
+          "CategoryID", // 选择分类ID以用于分组
+          "CategoryName", // 选择分类名称
+          [sequelize.literal("COUNT(DISTINCT Posts.PostID)"), "PostCount"],
+        ],
+        include: [
+          {
+            model: Posts,
+            attributes: [],
+            through: {
+              model: PostCategories,
+              attributes: [],
+            },
+          },
+        ],
+        group: "CategoryID",
+      });
+      // console.log(categoriesWithPostCount, 111111111111111111111111111)
+      return categoriesWithPostCount;
+    } catch (error) {
+      console.log(error);
+      return error;
     }
   }
 }

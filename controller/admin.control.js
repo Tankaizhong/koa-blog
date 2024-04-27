@@ -9,6 +9,7 @@ const {
   fetchAllUsers,
   addUser,
   getUser,
+  getAllPostsGroupByCategory,
 } = require("../service/admin.service");
 
 class AdminControl {
@@ -83,7 +84,6 @@ class AdminControl {
   async checkSuperAdmin(req, res, next) {
     try {
       // 创建用户
-      // console.log(req.body.user,'11111111111111111111111111333333')
       res.status(200).json(user);
     } catch (error) {
       next(error);
@@ -116,6 +116,16 @@ class AdminControl {
     } catch (error) {
       console.error("Error in fetchBlogStats:", error);
       next(error);
+    }
+  }
+
+  async fetchAllPostGroupByCategory(req, res, next) {
+    try {
+      const categoryCounts = await getAllPostsGroupByCategory();
+      res.json(categoryCounts);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal server error" });
     }
   }
 }

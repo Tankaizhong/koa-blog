@@ -59,7 +59,7 @@ router.get("/getCommentsByPostID", async (req, res) => {
       ],
     });
     // 如果成功获取评论，将评论数据发送给客户端
-    console.log(allComments);
+    // console.log(allComments);
     // const commentsToSend = allComments ? allComments : [];
     res.status(200).json(allComments);
   } catch (error) {
@@ -72,7 +72,7 @@ router.get("/getCommentsByPostID", async (req, res) => {
 router.get("/likeCount", async (req, res) => {
   try {
     const { CommentID } = req.query;
-    console.log(req.query);
+    // console.log(req.query);
     // 在这里根据 commentID 查询数据库获取评论的点赞数
     // 假设你使用 Sequelize 来查询数据库，以下是一个示例代码
     const likeCount = await Like.count({

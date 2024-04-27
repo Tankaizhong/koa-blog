@@ -63,7 +63,15 @@ class PostService {
       transaction = await sequelize.transaction();
       // 创建文章
       const post = await Posts.create(
-        { Title, Content, UserID, Likes: 0, Views: 0, Replies: 0 },
+        {
+          Title,
+          Content,
+          UserID,
+          Likes: 0,
+          Views: 0,
+          Replies: 0,
+          PostDate: new Date().toLocaleString(),
+        },
         { transaction },
       );
       // 创建或获取标签，并与文章关联
@@ -136,7 +144,8 @@ class PostService {
    * 查找top文章
    * @returns
    */
-  async getTopPost(CategoryID) {
+  async getPostByCategoryID(CategoryID) {
+    console.log(CategoryID, "CategoryID");
     try {
       // 构建查询条件
       const queryOptions = {
@@ -158,7 +167,7 @@ class PostService {
           },
         ],
       };
-
+      // console.log(CategoryID, "CategoryID")
       // 判断是否存在分类ID，如果有则添加关联条件
       if (CategoryID) {
         // 检查是否是热门分类
@@ -176,6 +185,7 @@ class PostService {
           });
         }
       }
+
       const topPosts = await Posts.findAll(queryOptions);
 
       // console.log(topPosts)
@@ -231,7 +241,10 @@ class PostService {
     try {
       const post = await Posts.findOne({
         where: { postID: num },
-        include: [{ model: Like, as: "Likes" }],
+        include: [
+          { model: Like, as: "Likes" },
+          { model: User, as: "author" },
+        ],
       });
       return post;
     } catch (error) {
@@ -328,9 +341,21 @@ class PostService {
       throw error;
     }
   }
+  //热门
+  async findTopPost() {
+    try {
+      const topPost = await Posts.findAll({
+        order: [["Views", "DESC"]],
+        limit: 10,
+      });
+      return topPost;
+    } catch (error) {
+      console.error("Error fetching top posts:", error);
+      throw error;
+    }
+  }
 
   //更新点赞
-
   async updatePostLikes(PostID) {
     try {
       // 查询指定文章的点赞数量

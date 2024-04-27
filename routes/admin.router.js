@@ -8,6 +8,7 @@ const {
   fetchUsersList,
   checkSuperAdmin,
   fetchBlogStats,
+  fetchAllPostGroupByCategory,
 } = require("../controller/admin.control");
 const {
   validateTagName,
@@ -42,5 +43,12 @@ router.get("/checkSuperAdmin", verifyToken, checkSuperAdmin);
 
 //博客系统的状态
 router.get("/fetchBlogStats", verifyToken, fetchBlogStats);
+
+//获取文章按标签
+router.get(
+  "/fetchAllPostGroupByCategory",
+  verifyToken,
+  fetchAllPostGroupByCategory,
+);
 
 module.exports = router;
