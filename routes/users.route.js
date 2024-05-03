@@ -33,6 +33,7 @@ const {
   validatePost,
   checkDuplicateArticle,
 } = require("../middleware/post.middleware");
+const {User} = require("../db/associations");
 
 /* GET users listing. */
 router.get("/", function (req, res, next) {
@@ -48,13 +49,27 @@ router.post("/login", userValidator, verifyLogin, login);
 //列表接口
 router.get("/categoriesList", fetchCategoriesList);
 
-//更具用户ID获得文章
-router.get("/postList", verifyToken, fetchPostList);
+//根据用户ID获得文章
+router.post("/postList", verifyToken, fetchPostList);
 
 //更新用户信息
 router.post("/updateUserInfor", verifyToken, updateUser);
 
 //上传头像
 router.post("/uploadAvatar", upload.single("file"), verifyToken, uploadAvatar);
+
+//删除用户
+router.post("/deleteUser", verifyToken, async (req, res, next) => {
+  const { UserID } = req.body;
+  // console.log(req.body)
+  try {
+    const user = await User.findByPk(UserID);
+    await user.destroy();
+    res.status(200).json({ success: true, message: "用户删除成功" });
+  } catch (error) {
+    console.error("用户删除失败", error);
+    res.status(500).json({ success: false, message: "用户删除失败" });
+  }
+});
 
 module.exports = router;

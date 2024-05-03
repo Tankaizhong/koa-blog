@@ -9,7 +9,7 @@ const router = express.Router({
 
 // POST 请求路由，用于提交评论
 router.post("/addComments", async (req, res) => {
-  console.log(req.body);
+  // console.log(req.body);
   try {
     // 从请求体中获取评论数据
     const { Content, PostID, UserID, ParentCommentID, Likes } =

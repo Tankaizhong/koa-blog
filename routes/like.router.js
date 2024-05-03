@@ -9,7 +9,7 @@ const {
   cancelLike,
   addCommentLike,
 } = require("../controller/like.control");
-const { Like } = require("../db/associations");
+const { Like,Notification } = require("../db/associations");
 
 const router = express.Router({
   prefix: "/like",
@@ -48,6 +48,24 @@ router.post("/checkCommentLike", verifyToken, async (req, res, next) => {
   } catch (error) {
     console.error("检查点赞情况失败", error);
     res.status(500).json({ message: "检查点赞情况失败" });
+  }
+});
+
+//统计点赞数
+router.get("/getLikeCount", verifyToken, async (req, res, next) => {
+  const { UserID } = req.query; // 使用 req.query 获取查询参数
+  console.log(req.query); // 确保正确获取到查询参数
+  try {
+    const count = await Notification.count({
+      where: {
+        TargetID: UserID,
+        IsRead: '0'
+      },
+    });
+    res.status(200).json({ count });
+  } catch (error) {
+    console.error("统计点赞数失败", error);
+    res.status(500).json({ message: "统计点赞数失败" });
   }
 });
 

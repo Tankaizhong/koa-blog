@@ -88,9 +88,9 @@ class UserController {
     try {
       // 假设您的 getPostList 函数接受一个用户 ID 参数
       // 如果您的函数签名不同，请适当修改参数
-      const user = req.body.user; // 假设用户 ID 存在于请求的参数中
+      const {UserID} = req.body; // 假设用户 ID 存在于请求的参数中
       // console.log('11111111111111111',user)
-      const data = await getPostList(user.UserID); // 调用 getPostList 函数获取用户文章列表
+      const data = await getPostList(UserID); // 调用 getPostList 函数获取用户文章列表
       res.json({ success: true, data: data });
     } catch (error) {
       console.error("获取用户文章列表失败", error);
