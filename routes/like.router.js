@@ -9,7 +9,7 @@ const {
   cancelLike,
   addCommentLike,
 } = require("../controller/like.control");
-const { Like,Notification } = require("../db/associations");
+const { Like, Notification } = require("../db/associations");
 
 const router = express.Router({
   prefix: "/like",
@@ -59,7 +59,7 @@ router.get("/getLikeCount", verifyToken, async (req, res, next) => {
     const count = await Notification.count({
       where: {
         TargetID: UserID,
-        IsRead: '0'
+        IsRead: "0",
       },
     });
     res.status(200).json({ count });

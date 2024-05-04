@@ -33,7 +33,7 @@ const {
   validatePost,
   checkDuplicateArticle,
 } = require("../middleware/post.middleware");
-const {User} = require("../db/associations");
+const { User } = require("../db/associations");
 
 /* GET users listing. */
 router.get("/", function (req, res, next) {

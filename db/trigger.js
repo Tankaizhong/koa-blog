@@ -1,21 +1,21 @@
 // 在点赞创建后触发通知的生成
-const {Posts, Comments, User, Like, Notification} = require("./associations");
+const { Posts, Comments, User, Like, Notification } = require("./associations");
 
 Like.afterCreate(async (like, options) => {
   try {
     // 获取被点赞的对象的相关信息，比如被点赞的文章或评论
-    const {PostID, CommentID} = like;
+    const { PostID, CommentID } = like;
     let target;
 
     if (PostID) {
       // 如果是点赞的是文章
       target = await Posts.findByPk(PostID, {
-        include: [{model: User, as: "author"}],
+        include: [{ model: User, as: "author" }],
       });
     } else if (CommentID) {
       // 如果是点赞的是评论
       target = await Comments.findByPk(CommentID, {
-        include: [{model: User}],
+        include: [{ model: User }],
       });
     }
     if (!target) {
@@ -23,7 +23,7 @@ Like.afterCreate(async (like, options) => {
       return;
     }
     const liker = await User.findByPk(like.UserID, {
-      attributes: ['Username']
+      attributes: ["Username"],
     });
     const targetType = PostID ? "Post" : "Comment";
     const targetID = target.PostID || target.CommentID;
@@ -34,7 +34,7 @@ Like.afterCreate(async (like, options) => {
     }
 
     let notificationContent = `用户 ${liker.dataValues.Username} 给您的 ${
-        targetType === "Post" ? "文章" : "评论"
+      targetType === "Post" ? "文章" : "评论"
     } 点了赞`;
     // 获取点赞用户的用户名
 
@@ -50,7 +50,7 @@ Like.afterCreate(async (like, options) => {
     // 创建通知并保存到数据库
     await Notification.create({
       TargetType: targetType,
-      TargetID: target.UserID ,
+      TargetID: target.UserID,
       Content: notificationContent,
       UserID: like.UserID,
     });
